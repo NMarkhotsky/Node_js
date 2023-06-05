@@ -1,25 +1,121 @@
-const express = require('express')
+const express = require('express');
+const Joi = require('joi');
+const contacts = require('../../models/contacts');
+const { httpError } = require('../../helpers');
 
-const router = express.Router()
+const router = express.Router();
+
+const addSchema = Joi.object({
+  name: Joi.string()
+    .min(2)
+    .max(20)
+    .messages({
+      'any.required': `missing required name field`,
+    })
+    .required(),
+  email: Joi.string()
+    .email()
+    .messages({
+      'any.required': `missing required email field`,
+    })
+    .required(),
+  phone: Joi.string()
+    .min(5)
+    .max(20)
+    .messages({
+      'any.required': `missing required phone field`,
+    })
+    .required(),
+});
 
 router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+  try {
+    const result = await contacts.listContacts();
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+  try {
+    const { contactId } = req.params;
+
+    const result = await contacts.getContactById(contactId);
+
+    if (!result) {
+      throw httpError(404, 'Not found');
+    }
+
+    return res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+  try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      throw httpError(400, 'missing fields');
+    }
+
+    const { error } = addSchema.validate(req.body);
+
+    if (error) {
+      throw httpError(400, error.message);
+    }
+
+    const result = await contacts.addContact(req.body);
+
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+  try {
+    const { contactId } = req.params;
+
+    const result = await contacts.removeContact(contactId);
+
+    if (!result) {
+      throw httpError(404, 'Not found');
+    }
+
+    res.json({
+      message: 'contact deleted',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+  try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      throw httpError(400, 'missing fields');
+    }
 
-module.exports = router
+    const { error } = addSchema.validate(req.body);
+
+    if (error) {
+      throw httpError(400, error.message);
+    }
+
+    const { contactId } = req.params;
+
+    const result = await contacts.updateContact(contactId, req.body);
+
+    if (!result) {
+      throw httpError(404, 'Not found');
+    }
+
+    return res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = router;
