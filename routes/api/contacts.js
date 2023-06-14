@@ -1,8 +1,8 @@
 const express = require('express');
 
-const { validateBody, isValidId } = require('../middlewares');
+const { validateBody, isValidId } = require('../../middlewares');
 
-const { contactSchema, updateFavoriteSchema } = require('../schemas');
+const { contactSchema, updateFavoriteSchema } = require('../../schemas');
 
 const {
   contacts: {
@@ -13,7 +13,7 @@ const {
     updateContact,
     updateStatusContact,
   },
-} = require('../controllers');
+} = require('../../controllers');
 
 const router = express.Router();
 
