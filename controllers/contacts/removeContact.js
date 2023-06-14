@@ -1,5 +1,5 @@
 const { Contact } = require('../../models');
-const { httpError } = require('../../utils');
+const { httpError, ctrlWrapper } = require('../../utils');
 
 const removeContact = async (req, res) => {
   const { contactId } = req.params;
@@ -15,4 +15,6 @@ const removeContact = async (req, res) => {
   });
 };
 
-module.exports = removeContact;
+module.exports = {
+  removeContact: ctrlWrapper(removeContact),
+};

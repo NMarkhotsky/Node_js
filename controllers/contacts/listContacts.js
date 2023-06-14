@@ -1,4 +1,5 @@
 const { Contact } = require('../../models');
+const { ctrlWrapper } = require('../../utils');
 
 const listContacts = async (_, res) => {
   const result = await Contact.find();
@@ -6,4 +7,6 @@ const listContacts = async (_, res) => {
   res.json(result);
 };
 
-module.exports = listContacts;
+module.exports = {
+  listContacts: ctrlWrapper(listContacts),
+};
