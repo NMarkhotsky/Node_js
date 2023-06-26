@@ -21,7 +21,9 @@ const sendEmail = async (email, verificationToken) => {
     to: email,
     from: GMAIL_USER,
     subject: 'Verify email',
-    html: `<p><a target="_blank" href=${BASE_URL}/api/users/verify/${verificationToken}>apply link verification</a></p>`,
+    html: `<p>
+    <a target="_blank" href=${BASE_URL}/api/users/verify/${verificationToken}>Click here to verify your email</a>
+  </p>`,
   };
 
   const verificationMail = await transport
