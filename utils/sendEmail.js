@@ -22,7 +22,7 @@ const sendEmail = async (email, verificationToken) => {
     from: GMAIL_USER,
     subject: 'Verify email',
     html: `<p>
-    <a target="_blank" href=${BASE_URL}/api/users/verify/${verificationToken}>Click here to verify your email</a>
+    <a target="_blank" href=${BASE_URL}/users/verify/${verificationToken}>Click here to verify your email</a>
   </p>`,
   };
 
