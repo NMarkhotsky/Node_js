@@ -21,7 +21,7 @@ describe('login', () => {
 
   test('Login user', async () => {
     const res = await request(app)
-      .post('/api/users/login')
+      .post('/users/login')
       .send({
         email: 'test@example.com',
         password: 'Password123#',
